@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "chitter-e2df5": {
+      "hosting": {
+        "chitter": [
+          "chitter-e2df5"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "chitter-e2df5"
+  }
+}

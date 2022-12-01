@@ -1,1 +1,22 @@
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
 /* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --text: #ffffff;
+  --subtext: #8b98a5;
+  --background: #15202b;
+  --highlight: #3d4650;
+  --border: #38444d;
+  --button: #1d9bf0;
+  --search: #273340;
+  --suggested: #1e2732;
+}

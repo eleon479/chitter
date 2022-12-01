@@ -91,6 +91,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "chitter:build:production",
+            "firebaseProject": "chitter-e2df5",
+            "firebaseHostingSite": "chitter-e2df5"
+          }
         }
       }
     }
