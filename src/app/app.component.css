@@ -83,9 +83,6 @@ aside#Navigation .Navigation-label-wrapper {
   margin: 0px 16px 0px 20px;
 }
 
-aside#Navigation .Navigation-tweet-btn-wrapper {
-}
-
 aside#Navigation a.Navigation-tweet-btn-lg {
   margin-top: 10px;
   display: flex;
@@ -379,9 +376,6 @@ div#Write-tweet-submit-btn-inner {
   color: var(--text);
 }
 
-span#Write-tweet-submit-btn-label {
-}
-
 .posts-loading {
   display: flex;
   flex-direction: row;
@@ -558,9 +552,6 @@ span#Write-tweet-submit-btn-label {
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-}
-
-.Post .Post-inner .pfp-area {
 }
 
 .Post-sections-container {
