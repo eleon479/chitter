@@ -7,6 +7,7 @@ import { TimelineService } from './services/timeline.service';
 
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { environment } from '../environments/environment';
 @NgModule({
   declarations: [AppComponent],
@@ -15,6 +16,7 @@ import { environment } from '../environments/environment';
     FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // for firestore
+    AngularFireAnalyticsModule,
   ],
   providers: [TimelineService],
   bootstrap: [AppComponent],
