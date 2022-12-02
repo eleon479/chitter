@@ -129,6 +129,10 @@ export class AppComponent implements OnInit {
   }
 
   createTweet(): void {
+    if (this.newTweetBuffer.length < 1) {
+      return;
+    }
+
     this.newTweetSending = true;
     const newTweet: TweetDTO = {
       name: this.currentUser.name,

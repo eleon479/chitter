@@ -691,7 +691,8 @@ input[type="text"]#search-input::placeholder {
   text-align: start;
 }
 
-#trending ul {
+#trending ul,
+#suggested ul {
   list-style-type: none;
 }
 

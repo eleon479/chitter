@@ -78,8 +78,8 @@
           </div>
           <div class="Account-switch-details-container">
             <div class="Account-switch-details-inner">
-              <div class="Account-switch-name">eddy leon</div>
-              <div class="Account-switch-tag">@eleon479</div>
+              <div class="Account-switch-name">{{ currentUser.name }}</div>
+              <div class="Account-switch-tag">@{{ currentUser.tag }}</div>
             </div>
           </div>
           <div class="Account-switch-options">
@@ -235,15 +235,16 @@
           <ul>
             <li>@abc</li>
             <li>@def</li>
-            <li>#@ghi</li>
+            <li>@ghi</li>
           </ul>
-          <select (change)="switchUser($event)">
-            <option *ngFor="let userOption of userList" [value]="userOption">
-              {{ userOption }}
-            </option>
-          </select>
         </div>
       </div>
+      <label for="userChanger">Switch User (dev): </label>
+      <select id="userChanger" (change)="switchUser($event)">
+        <option *ngFor="let userOption of userList" [value]="userOption">
+          {{ userOption }}
+        </option>
+      </select>
     </aside>
   </div>
 </div>
