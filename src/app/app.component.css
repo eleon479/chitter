@@ -450,7 +450,7 @@ div#Write-tweet-submit-btn-inner {
 }
 
 .Post:hover {
-  background-color: var(--highlight);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .post-pfp-container {
