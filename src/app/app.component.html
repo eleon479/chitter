@@ -111,7 +111,6 @@
                 (keydown)="onWriteTweetInput($event)"
               ></textarea>
             </div>
-            <p>{{ newTweetBuffer }}</p>
             <div *ngIf="newTweetSending">
               <div class="posts-loading">
                 <div class="lds-ellipsis">
@@ -122,14 +121,6 @@
                 </div>
               </div>
             </div>
-            <!-- <ul class="list-group">
-              <li
-                class="list-group-item"
-                *ngFor="let t of finalTweets; let i = index"
-              >
-                {{ t.name }}
-              </li>
-            </ul> -->
             <div id="Write-tweet-actions">
               <div id="Write-tweet-tools">
                 <div class="tool-wrapper">

@@ -19,18 +19,6 @@ export class UserService {
     return this.db.doc<User>(this.userCollectionPath + '/' + id);
   }
 
-  /*
-    ex: 
-      this.userService
-      .getAll()
-      .valueChanges()
-      .subscribe({
-        next: (users) => {
-          console.log(users);
-        },
-      });
-  */
-
   getAll(): AngularFirestoreCollection<User> {
     return this.usersRef;
   }

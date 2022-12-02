@@ -1,4 +1,3 @@
-import { DocumentReference } from '@angular/fire/compat/firestore';
 import { Timestamp } from '@angular/fire/firestore';
 
 export class Tweet {

@@ -2,12 +2,9 @@ import { Injectable } from '@angular/core';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
-  AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
-import { DocumentReference } from '@angular/fire/firestore';
-import { map, Observable } from 'rxjs';
-import { Feed, Tweet, TweetDTO } from '../models/tweet.model';
-import { User } from '../models/user.model';
+import { map } from 'rxjs';
+import { TweetDTO } from '../models/tweet.model';
 
 @Injectable({ providedIn: 'root' })
 export class TimelineService {
@@ -24,7 +21,6 @@ export class TimelineService {
     return this.db.collection(`/feeds/${userId}/tweets`, (ref) =>
       ref.orderBy('ts', 'desc')
     );
-    // return this.db.collection(`/feeds/${userId}/tweets`)
   }
 
   getTweetsByUserId(userId: string): AngularFirestoreCollection<TweetDTO> {

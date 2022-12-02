@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { TimelineService } from './services/timeline.service';
-import {
-  AngularFirestore,
-  AngularFirestoreDocument,
-  AngularFirestoreCollection,
-} from '@angular/fire/compat/firestore';
 import { Timestamp } from '@angular/fire/firestore';
-import { map, Observable } from 'rxjs';
+import { map } from 'rxjs';
+
 import { Tweet, TweetDTO } from './models/tweet.model';
-import { UserService } from './services/user.service';
 import { User } from './models/user.model';
+
+import { UserService } from './services/user.service';
+import { TimelineService } from './services/timeline.service';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +14,8 @@ import { User } from './models/user.model';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  // user account
+  // (temp) user account
   userId = 'zQGYBBxL4whNQZ3uC0jo';
-  currentName = 'Public Test User';
-  currentTag = 'public';
   currentUser: User;
 
   // new tweet creation
@@ -43,10 +38,17 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchUser();
-    this.fetchUserTweets();
-    this.fetchFeed();
-    // this.fetchTweets();
+    this.getUser().subscribe((user) => {
+      this.currentUser = user;
+      this.fetchUserTweets();
+      this.fetchFeedTweets();
+    });
+  }
+
+  getUser() {
+    return this.userService
+      .getUserById(this.userId)
+      .valueChanges({ idField: 'id' });
   }
 
   updateTweetFeed() {
@@ -54,38 +56,9 @@ export class AppComponent implements OnInit {
     this.tweets.sort((a, b) => b.ts.getTime() - a.ts.getTime());
   }
 
-  fetchUser(): void {
-    this.userService
-      .getAll()
-      .snapshotChanges()
-      .pipe(
-        map((changes) =>
-          changes.map((c) => ({
-            id: c.payload.doc.id,
-            ...c.payload.doc.data(),
-          }))
-        )
-      )
-      .subscribe({
-        next: (users) => {
-          console.log(users);
-        },
-      });
-
-    this.userService
-      .getUserById(this.userId)
-      .valueChanges({ idField: 'id' })
-      .subscribe({
-        next: (user) => {
-          console.log(user);
-          this.currentUser = user;
-        },
-      });
-  }
-
   fetchUserTweets() {
     this.timelineService
-      .getTweetsByUserId(this.userId)
+      .getTweetsByUserId(this.currentUser.id)
       .valueChanges({ idField: 'id' })
       .subscribe((userTweets) => {
         console.log('userTweets:', userTweets);
@@ -100,9 +73,9 @@ export class AppComponent implements OnInit {
       });
   }
 
-  fetchFeed() {
+  fetchFeedTweets() {
     this.timelineService
-      .getFeedByUserId(this.userId)
+      .getFeedByUserId(this.currentUser.id)
       .snapshotChanges()
       .pipe(
         map((changes) =>
@@ -126,32 +99,6 @@ export class AppComponent implements OnInit {
       });
   }
 
-  // - Gets ALL tweets
-  // fetchTweets(): void {
-  //   this.timelineService
-  //     .getAll()
-  //     .snapshotChanges()
-  //     .pipe(
-  //       map((changes) =>
-  //         changes.map((c) => ({
-  //           id: c.payload.doc.id,
-  //           ...c.payload.doc.data(),
-  //         }))
-  //       )
-  //     )
-  //     .subscribe((fetchedTweets) => {
-  //       console.log(fetchedTweets);
-  //       this.followingTweets = fetchedTweets.map((tweet) => {
-  //         let res = {
-  //           ...tweet,
-  //           ts: tweet.ts.toDate(),
-  //         };
-  //         return res;
-  //       });
-  //       this.isTimelineLoading = false;
-  //     });
-  // }
-
   createTweet(): void {
     this.newTweetSending = true;
     const newTweet: TweetDTO = {
@@ -159,7 +106,7 @@ export class AppComponent implements OnInit {
       tag: this.currentUser.tag,
       ts: new Timestamp(Date.now() / 1000, 0),
       text: this.newTweetBuffer,
-      userId: this.userId,
+      userId: this.currentUser.id,
     };
     this.timelineService.create(newTweet).then(() => {
       console.log('Created new tweet!');
