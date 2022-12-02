@@ -16,6 +16,7 @@ import { TimelineService } from './services/timeline.service';
 export class AppComponent implements OnInit {
   // (temp) user account
   userId = 'zQGYBBxL4whNQZ3uC0jo';
+  userList = [];
   currentUser: User;
 
   // new tweet creation
@@ -38,6 +39,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setupUserApp();
+  }
+
+  setupUserApp() {
     this.getUser().subscribe((user) => {
       this.currentUser = user;
       this.fetchUserTweets();
@@ -45,7 +50,31 @@ export class AppComponent implements OnInit {
     });
   }
 
+  switchUser(e) {
+    this.userId = e.target.value;
+    this.setupUserApp();
+  }
+
   getUser() {
+    // @TODO - remove after adding auth/login
+    this.userService
+      .getAll()
+      .snapshotChanges()
+      .pipe(
+        map((changes) =>
+          changes.map((c) => ({
+            id: c.payload.doc.id,
+            ...c.payload.doc.data(),
+          }))
+        )
+      )
+      .subscribe({
+        next: (users) => {
+          this.userList = users.map((user) => user.id);
+          console.log(this.userList);
+        },
+      });
+
     return this.userService
       .getUserById(this.userId)
       .valueChanges({ idField: 'id' });

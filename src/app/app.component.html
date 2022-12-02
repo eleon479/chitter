@@ -237,6 +237,11 @@
             <li>@def</li>
             <li>#@ghi</li>
           </ul>
+          <select (change)="switchUser($event)">
+            <option *ngFor="let userOption of userList" [value]="userOption">
+              {{ userOption }}
+            </option>
+          </select>
         </div>
       </div>
     </aside>
