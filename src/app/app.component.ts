@@ -39,11 +39,12 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.setupUserApp();
+    this.getUserList();
+    this.setupUserApp(this.userId);
   }
 
-  setupUserApp() {
-    this.getUser().subscribe((user) => {
+  setupUserApp(userId) {
+    this.getUser(userId).subscribe((user) => {
       this.currentUser = user;
       this.fetchUserTweets();
       this.fetchFeedTweets();
@@ -52,10 +53,10 @@ export class AppComponent implements OnInit {
 
   switchUser(e) {
     this.userId = e.target.value;
-    this.setupUserApp();
+    this.setupUserApp(this.userId);
   }
 
-  getUser() {
+  getUserList() {
     // @TODO - remove after adding auth/login
     this.userService
       .getAll()
@@ -74,10 +75,10 @@ export class AppComponent implements OnInit {
           console.log(this.userList);
         },
       });
+  }
 
-    return this.userService
-      .getUserById(this.userId)
-      .valueChanges({ idField: 'id' });
+  getUser(userId) {
+    return this.userService.getUserById(userId).valueChanges({ idField: 'id' });
   }
 
   updateTweetFeed() {

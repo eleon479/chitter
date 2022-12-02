@@ -239,8 +239,8 @@
           </ul>
         </div>
       </div>
-      <label for="userChanger">Switch User (dev): </label>
       <select id="userChanger" (change)="switchUser($event)">
+        <option selected disabled>Switch user (dev)...</option>
         <option *ngFor="let userOption of userList" [value]="userOption.id">
           @{{ userOption.tag }} - {{ userOption.name }}
         </option>
