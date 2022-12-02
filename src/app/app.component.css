@@ -696,6 +696,14 @@ input[type="text"]#search-input::placeholder {
   list-style-type: none;
 }
 
+#userChanger {
+  background-color: var(--background);
+  height: 40px;
+  border-radius: 40px;
+  padding: 10px;
+  color: var(--text);
+}
+
 a:link {
   text-decoration: none;
   color: var(--text);
