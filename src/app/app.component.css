@@ -511,6 +511,11 @@ div#Write-tweet-submit-btn-inner {
   line-height: 20px;
 }
 
+.underline-pointer:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .post-text {
   font-size: 15px;
   font-weight: 400;

@@ -159,6 +159,20 @@ export class AppComponent implements OnInit {
     this.createTweet();
   }
 
+  getTweetHoverDate(ts: Date) {
+    let hoverTime = ts.toLocaleTimeString('en-us', {
+      hour: 'numeric',
+      minute: 'numeric',
+    });
+    let hoverDate = ts.toLocaleDateString('en-us', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+
+    return `${hoverTime} - ${hoverDate}`;
+  }
+
   getTweetTimeElapsed(ts: Date) {
     const current = new Date();
     const currentTime = current.getTime();

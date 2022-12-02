@@ -174,10 +174,15 @@
             </div>
             <div class="post-contents-container">
               <div class="post-info">
-                <div class="poster-name">{{ tweet.name }}</div>
-                <div class="poster-tag">@{{ tweet.tag }}</div>
-                <div class="time-since">
-                  · {{ getTweetTimeElapsed(tweet.ts) }}
+                <div class="poster-name underline-pointer">
+                  {{ tweet.name }}
+                </div>
+                <div class="poster-tag">@{{ tweet.tag }} ·</div>
+                <div
+                  class="time-since underline-pointer"
+                  [title]="getTweetHoverDate(tweet.ts)"
+                >
+                  {{ getTweetTimeElapsed(tweet.ts) }}
                 </div>
               </div>
               <div class="post-text">{{ tweet.text }}</div>
