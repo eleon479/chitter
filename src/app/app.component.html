@@ -241,8 +241,8 @@
       </div>
       <label for="userChanger">Switch User (dev): </label>
       <select id="userChanger" (change)="switchUser($event)">
-        <option *ngFor="let userOption of userList" [value]="userOption">
-          {{ userOption }}
+        <option *ngFor="let userOption of userList" [value]="userOption.id">
+          @{{ userOption.tag }} - {{ userOption.name }}
         </option>
       </select>
     </aside>

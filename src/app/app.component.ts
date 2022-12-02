@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
       )
       .subscribe({
         next: (users) => {
-          this.userList = users.map((user) => user.id);
+          this.userList = users;
           console.log(this.userList);
         },
       });
