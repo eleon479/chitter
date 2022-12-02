@@ -7,6 +7,7 @@ import { User } from './models/user.model';
 
 import { UserService } from './services/user.service';
 import { TimelineService } from './services/timeline.service';
+import { AngularFireAnalytics } from '@angular/fire/compat/analytics';
 
 @Component({
   selector: 'app-root',
@@ -31,8 +32,10 @@ export class AppComponent implements OnInit {
 
   constructor(
     private timelineService: TimelineService,
-    private userService: UserService
+    private userService: UserService,
+    analytics: AngularFireAnalytics
   ) {
+    analytics.logEvent('custom_event', { appComponent: 'constructed' });
     this.tweets = [];
     this.followingTweets = [];
     this.userTweets = [];
