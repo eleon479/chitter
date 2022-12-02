@@ -1,71 +1,71 @@
-export class TimelineService {
-  tweets = [
-    {
-      name: 'Certified Sh*tposter',
-      tag: 'spicymemes69',
-      ts: '12h',
-      text: 'This is the first real tweet!',
-    },
-    {
-      name: 'Memelord Supreme',
-      tag: 'r3dditl4d',
-      ts: '15m',
-      text: 'Boy I sure hope Mr. Musk doesnt buy this too! ;)',
-    },
-    {
-      name: 'Hispanick Jonas',
-      tag: 'sailingburrito',
-      ts: '58m',
-      text: 'ARGENTINA WHAT ARE YOU DOING??? brb burning my messi shirt',
-    },
-    {
-      name: 'I Ran Out of Names',
-      tag: 'notcreative',
-      ts: '4h',
-      text:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ' +
-        'eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut' +
-        'enim ad minim veniam',
-    },
-    {
-      name: 'Test1',
-      tag: 'tst123',
-      ts: '10s',
-      text: "Pls don't blow up...",
-    },
-    {
-      name: 'Test2',
-      tag: 'tst123',
-      ts: '5s',
-      text: "Pls don't blow up...",
-    },
-    {
-      name: 'Test3',
-      tag: 'tst123',
-      ts: '17s',
-      text: "Pls don't blow up...",
-    },
-    {
-      name: 'Test4',
-      tag: 'tst123',
-      ts: '2s',
-      text: "Pls don't blow up...",
-    },
-    {
-      name: 'Test5',
-      tag: 'tst123',
-      ts: '9s',
-      text: "Pls don't blow up...",
-    },
-    {
-      name: 'Test6',
-      tag: 'tst123',
-      ts: '12s',
-      text: "Pls don't blow up...",
-    },
-  ];
+import { Injectable } from '@angular/core';
+import {
+  AngularFirestore,
+  AngularFirestoreCollection,
+  AngularFirestoreDocument,
+} from '@angular/fire/compat/firestore';
+import { DocumentReference } from '@angular/fire/firestore';
+import { map, Observable } from 'rxjs';
+import { Feed, Tweet, TweetDTO } from '../models/tweet.model';
+import { User } from '../models/user.model';
 
-  fetchTweets() {
-    return this.tweets;
+@Injectable({ providedIn: 'root' })
+export class TimelineService {
+  private tweetsCollectionPath = '/tweets';
+  tweetsRef: AngularFirestoreCollection<TweetDTO>;
+
+  constructor(private db: AngularFirestore) {
+    this.tweetsRef = db.collection(this.tweetsCollectionPath, (ref) =>
+      ref.orderBy('ts', 'desc')
+    );
+  }
+
+  getFeedByUserId(userId: string): AngularFirestoreCollection<TweetDTO> {
+    return this.db.collection(`/feeds/${userId}/tweets`, (ref) =>
+      ref.orderBy('ts', 'desc')
+    );
+    // return this.db.collection(`/feeds/${userId}/tweets`)
+  }
+
+  getTweetsByUserId(userId: string): AngularFirestoreCollection<TweetDTO> {
+    return this.db.collection<TweetDTO>(`/tweets`, (ref) =>
+      ref.where('userId', '==', userId)
+    );
+  }
+
+  getAll(): AngularFirestoreCollection<TweetDTO> {
+    return this.tweetsRef;
+  }
+
+  create(tweet: TweetDTO) {
+    return this.tweetsRef.add({ ...tweet }).then((ref) => {
+      // get followers
+      const followQuery = this.db.collection<{
+        followerUserId: string;
+        followingUserId: string;
+      }>('/follows', (followRef) =>
+        followRef.where('followingUserId', '==', tweet.userId)
+      );
+
+      followQuery
+        .snapshotChanges()
+        .pipe(
+          map((changes) =>
+            changes.map((c) => ({
+              id: c.payload.doc.id,
+              ...c.payload.doc.data(),
+            }))
+          )
+        )
+        .subscribe((followers) => {
+          console.log(followers);
+          followers.forEach((follower) => {
+            this.db
+              .collection(`/feeds/${follower.followerUserId}/tweets`)
+              .doc(ref.id)
+              .set({ ...tweet });
+          });
+        });
+    });
   }
 }

@@ -112,6 +112,16 @@
               ></textarea>
             </div>
             <p>{{ newTweetBuffer }}</p>
+            <div *ngIf="newTweetSending">
+              <div class="posts-loading">
+                <div class="lds-ellipsis">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
             <!-- <ul class="list-group">
               <li
                 class="list-group-item"
@@ -155,7 +165,7 @@
           </div>
         </div>
 
-        <div *ngIf="isTimelineLoading; else postFeed">
+        <div *ngIf="tweets.length < 1; else postFeed">
           <div class="posts-loading">
             <div class="lds-ellipsis">
               <div></div>
@@ -167,7 +177,7 @@
         </div>
 
         <ng-template #postFeed>
-          <div class="Post" *ngFor="let tweet of finalTweets">
+          <div class="Post" *ngFor="let tweet of tweets">
             <div class="post-pfp-container">
               <i class="bi bi-person post-pfp-icon"></i>
             </div>
@@ -175,7 +185,9 @@
               <div class="post-info">
                 <div class="poster-name">{{ tweet.name }}</div>
                 <div class="poster-tag">@{{ tweet.tag }}</div>
-                <div class="time-since">· {{ tweet.ts }}</div>
+                <div class="time-since">
+                  · {{ getTweetTimeElapsed(tweet.ts) }}
+                </div>
               </div>
               <div class="post-text">{{ tweet.text }}</div>
               <div class="post-actions">
