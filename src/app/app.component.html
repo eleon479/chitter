@@ -78,8 +78,8 @@
           </div>
           <div class="Account-switch-details-container">
             <div class="Account-switch-details-inner">
-              <div class="Account-switch-name">{{ currentUser.name }}</div>
-              <div class="Account-switch-tag">@{{ currentUser.tag }}</div>
+              <div class="Account-switch-name">{{ currentUser?.name }}</div>
+              <div class="Account-switch-tag">@{{ currentUser?.tag }}</div>
             </div>
           </div>
           <div class="Account-switch-options">
@@ -244,6 +244,16 @@
           </ul>
         </div>
       </div>
+
+      <div *ngIf="auth.user | async as user; else showLogin">
+        <h1>Hello {{ user.displayName }}!</h1>
+        <button (click)="logout()">Logout</button>
+      </div>
+      <ng-template #showLogin>
+        <p>Please login.</p>
+        <button (click)="login()">Login with Twitter</button>
+      </ng-template>
+
       <select id="userChanger" (change)="switchUser($event)">
         <option selected disabled>Switch user (dev)...</option>
         <option *ngFor="let userOption of userList" [value]="userOption.id">

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from '@angular/fire/firestore';
 import { map } from 'rxjs';
 
@@ -7,6 +8,8 @@ import { User } from './models/user.model';
 
 import { UserService } from './services/user.service';
 import { TimelineService } from './services/timeline.service';
+
+import firebase from 'firebase/compat/app';
 
 @Component({
   selector: 'app-root',
@@ -30,12 +33,21 @@ export class AppComponent implements OnInit {
   isTimelineLoading = true;
 
   constructor(
+    public auth: AngularFireAuth,
     private timelineService: TimelineService,
     private userService: UserService
   ) {
     this.tweets = [];
     this.followingTweets = [];
     this.userTweets = [];
+  }
+
+  login() {
+    this.auth.signInWithPopup(new firebase.auth.TwitterAuthProvider());
+  }
+
+  logout() {
+    this.auth.signOut();
   }
 
   ngOnInit(): void {
