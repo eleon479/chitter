@@ -3,3 +3,8 @@ export class User {
   name?: string;
   tag?: string;
 }
+
+export class Follow {
+  followerUserId: string;
+  followingUserId: string;
+}

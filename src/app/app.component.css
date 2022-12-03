@@ -384,6 +384,14 @@ div#Write-tweet-submit-btn-inner {
   margin-top: 15px;
 }
 
+.no-tweets {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  min-height: 120px;
+  margin-top: 15px;
+}
+
 .lds-ellipsis {
   display: inline-block;
   position: relative;

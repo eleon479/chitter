@@ -5,6 +5,7 @@ import {
 } from '@angular/fire/compat/firestore';
 import { map } from 'rxjs';
 import { TweetDTO } from '../models/tweet.model';
+import { Follow } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class TimelineService {
@@ -36,10 +37,7 @@ export class TimelineService {
   create(tweet: TweetDTO) {
     return this.tweetsRef.add({ ...tweet }).then((ref) => {
       // get followers
-      const followQuery = this.db.collection<{
-        followerUserId: string;
-        followingUserId: string;
-      }>('/follows', (followRef) =>
+      const followQuery = this.db.collection<Follow>('/follows', (followRef) =>
         followRef.where('followingUserId', '==', tweet.userId)
       );
 

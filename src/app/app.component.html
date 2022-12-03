@@ -156,7 +156,7 @@
           </div>
         </div>
 
-        <div *ngIf="tweets.length < 1; else postFeed">
+        <div *ngIf="isTimelineLoading || isUserTweetsLoading; else postFeed">
           <div class="posts-loading">
             <div class="lds-ellipsis">
               <div></div>
@@ -168,6 +168,18 @@
         </div>
 
         <ng-template #postFeed>
+          <div *ngIf="tweets.length < 1" class="no-tweets">
+            <p>
+              Hmm, you don't seem to have any tweets yet...<br />
+              Try following
+              <strong
+                ><a class="underline-pointer" (click)="followPublic()"
+                  >@public</a
+                >
+              </strong>
+              to get your feed started!
+            </p>
+          </div>
           <div class="Post" *ngFor="let tweet of tweets">
             <div class="post-pfp-container">
               <i class="bi bi-person post-pfp-icon"></i>
@@ -246,7 +258,9 @@
       </div>
 
       <div *ngIf="auth.user | async as user; else showLogin">
-        <h1>Hello {{ user.displayName }}!</h1>
+        <h2>
+          Hello, <em>{{ user.displayName }}</em>
+        </h2>
         <button (click)="logout()">Logout</button>
       </div>
       <ng-template #showLogin>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from '@angular/fire/firestore';
-import { map } from 'rxjs';
+import { map, UnsubscriptionError } from 'rxjs';
 
 import { Tweet, TweetDTO } from './models/tweet.model';
 import { User } from './models/user.model';
@@ -18,7 +18,7 @@ import firebase from 'firebase/compat/app';
 })
 export class AppComponent implements OnInit {
   // (temp) user account
-  userId = 'zQGYBBxL4whNQZ3uC0jo';
+  tempUserId = 'zQGYBBxL4whNQZ3uC0jo';
   userList = [];
   currentUser: User;
 
@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
   followingTweets: Tweet[];
   userTweets: Tweet[];
   isTimelineLoading = true;
+  isUserTweetsLoading = true;
 
   constructor(
     public auth: AngularFireAuth,
@@ -40,30 +41,44 @@ export class AppComponent implements OnInit {
     this.tweets = [];
     this.followingTweets = [];
     this.userTweets = [];
+
     this.getUserList();
-    this.auth.authState.subscribe((user) => {
+    // this.setupUserApp(this.tempUserId);
+
+    this.auth.user.subscribe((user) => {
       if (!user) {
-        //this.currentUser = user anonymous??
-        //this.userId = user.uid;
+        console.log('user is not authed');
+        this.userService
+          .getUserById(this.tempUserId)
+          .valueChanges({ idField: 'id' })
+          .subscribe({
+            next: (user) => {
+              this.currentUser = user;
+              this.fetchUserTweets();
+              this.fetchFeedTweets();
+            },
+          });
+        // const anon = this.auth.signInAnonymously();
       } else {
-        //this.currentUser = {...user attr's}??
-        //this.userId = user.uid;
+        console.log('user is authed');
+        this.userService
+          .getUserById(user.uid)
+          .valueChanges({ idField: 'id' })
+          .subscribe({
+            next: (user) => {
+              this.currentUser = user;
+              this.fetchUserTweets();
+              this.fetchFeedTweets();
+            },
+          });
       }
-      this.setupUserApp(this.userId);
-      console.log('auth.authState: ', user);
+
+      console.log('auth.user: ', user);
     });
-  }
 
-  async login() {
-    this.auth.signInWithPopup(new firebase.auth.TwitterAuthProvider());
-  }
-
-  // async loginAnonymously() {
-  //   const user = await this.auth.signInAnonymously();
-  // }
-
-  logout() {
-    this.auth.signOut();
+    this.auth.authState.subscribe((user) =>
+      console.log('auth.authState: ', user)
+    );
   }
 
   ngOnInit(): void {}
@@ -76,9 +91,39 @@ export class AppComponent implements OnInit {
     });
   }
 
+  async login() {
+    this.auth
+      .signInWithPopup(new firebase.auth.TwitterAuthProvider())
+      .then((cred) => {
+        console.log('login:cred:', cred.additionalUserInfo);
+        if (cred.additionalUserInfo.isNewUser) {
+          const newUser: User = {
+            id: cred.user.uid,
+            name: cred.user.displayName,
+            tag: cred.additionalUserInfo.username,
+          };
+
+          // update user doc with tag
+          this.userService.createUser(newUser).then((ok) => {
+            console.log('new user added: ', newUser);
+          });
+        } else {
+          // 1. get user acc
+        }
+      });
+  }
+
+  // async loginAnonymously() {
+  //   const user = await this.auth.signInAnonymously();
+  // }
+
+  logout() {
+    this.auth.signOut();
+  }
+
   switchUser(e) {
-    this.userId = e.target.value;
-    this.setupUserApp(this.userId);
+    // this.tempUserId = e.target.value;
+    // this.setupUserApp(this.tempUserId);
   }
 
   getUserList() {
@@ -97,7 +142,6 @@ export class AppComponent implements OnInit {
       .subscribe({
         next: (users) => {
           this.userList = users;
-          console.log(this.userList);
         },
       });
   }
@@ -116,7 +160,6 @@ export class AppComponent implements OnInit {
       .getTweetsByUserId(this.currentUser.id)
       .valueChanges({ idField: 'id' })
       .subscribe((userTweets) => {
-        console.log('userTweets:', userTweets);
         this.userTweets = userTweets.map((tweet) => {
           let res = {
             ...tweet,
@@ -124,6 +167,7 @@ export class AppComponent implements OnInit {
           };
           return res;
         });
+        this.isUserTweetsLoading = false;
         this.updateTweetFeed();
       });
   }
@@ -141,7 +185,6 @@ export class AppComponent implements OnInit {
         )
       )
       .subscribe((fetchedTweets) => {
-        console.log(fetchedTweets);
         this.followingTweets = fetchedTweets.map((tweet) => {
           let res = {
             ...tweet,
@@ -168,7 +211,6 @@ export class AppComponent implements OnInit {
       userId: this.currentUser.id,
     };
     this.timelineService.create(newTweet).then(() => {
-      console.log('Created new tweet!');
       this.newTweetBuffer = '';
       this.newTweetSending = false;
     });
@@ -182,6 +224,21 @@ export class AppComponent implements OnInit {
 
   onWriteTweetButtonClick() {
     this.createTweet();
+  }
+
+  followPublic() {
+    this.userService
+      .followUser(this.currentUser.id, this.tempUserId)
+      .then(() => {
+        console.log(`You are now following ${this.tempUserId}!`);
+        this.userService.addTweetsToFollowerFeed(
+          this.currentUser.id,
+          this.tempUserId
+        );
+      });
+
+    // @TODO offload this behavior (and others like) onto the
+    // backend cloud function calls w/ a trigger on those collections/docs
   }
 
   getTweetHoverDate(ts: Date) {
