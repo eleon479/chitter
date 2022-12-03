@@ -40,20 +40,33 @@ export class AppComponent implements OnInit {
     this.tweets = [];
     this.followingTweets = [];
     this.userTweets = [];
+    this.getUserList();
+    this.auth.authState.subscribe((user) => {
+      if (!user) {
+        //this.currentUser = user anonymous??
+        //this.userId = user.uid;
+      } else {
+        //this.currentUser = {...user attr's}??
+        //this.userId = user.uid;
+      }
+      this.setupUserApp(this.userId);
+      console.log('auth.authState: ', user);
+    });
   }
 
-  login() {
+  async login() {
     this.auth.signInWithPopup(new firebase.auth.TwitterAuthProvider());
   }
+
+  // async loginAnonymously() {
+  //   const user = await this.auth.signInAnonymously();
+  // }
 
   logout() {
     this.auth.signOut();
   }
 
-  ngOnInit(): void {
-    this.getUserList();
-    this.setupUserApp(this.userId);
-  }
+  ngOnInit(): void {}
 
   setupUserApp(userId) {
     this.getUser(userId).subscribe((user) => {
