@@ -1,0 +1,31 @@
+<div id="search-container">
+  <div id="search-wrapper">
+    <div id="search-icon-wrapper">
+      <i class="bi bi-search input-icon"></i>
+    </div>
+    <div id="search-input-wrapper">
+      <input
+        id="search-input"
+        placeholder="Search Twitter"
+        type="text"
+        maxLength="27"
+      />
+    </div>
+  </div>
+</div>
+<div id="trending-container">
+  <div id="trending">
+    <h2>What's happening</h2>
+    <ul>
+      <li *ngFor="let trend of trending">{{ trend }}</li>
+    </ul>
+  </div>
+</div>
+<div id="suggested-container">
+  <div id="suggested">
+    <h2>Who to follow</h2>
+    <ul>
+      <li *ngFor="let suggestedUser of suggested">{{ suggestedUser }}</li>
+    </ul>
+  </div>
+</div>

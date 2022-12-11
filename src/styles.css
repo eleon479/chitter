@@ -17,6 +17,27 @@ body {
   --highlight: #3d4650;
   --border: #38444d;
   --button: #1d9bf0;
+  --button-hover: #1d9bf024;
   --search: #273340;
   --suggested: #1e2732;
+}
+
+a:link {
+  text-decoration: none;
+  color: var(--text);
+}
+
+a:visited {
+  text-decoration: none;
+  color: var(--text);
+}
+
+a:hover {
+  text-decoration: none;
+  color: var(--text);
+}
+
+a:active {
+  text-decoration: none;
+  color: var(--text);
 }

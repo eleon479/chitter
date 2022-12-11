@@ -1,0 +1,125 @@
+<nav>
+  <div id="Main-nav-inner">
+    <div id="Main-nav-inner-col">
+      <div>Home</div>
+    </div>
+  </div>
+</nav>
+<div class="Post-feed">
+  <div id="Write-tweet">
+    <div class="pfp-area">
+      <i class="bi bi-person pfp-icon"></i>
+    </div>
+    <div id="Write-tweet-container">
+      <div id="Write-tweet-input-wrapper">
+        <textarea
+          id="Write-tweet-input"
+          placeholder="What's happening?"
+          maxLength="140"
+          [(ngModel)]="newTweetBuffer"
+          (keydown)="onWriteTweetInput($event)"
+        ></textarea>
+      </div>
+      <div *ngIf="newTweetSending">
+        <div class="posts-loading">
+          <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+      <div id="Write-tweet-actions">
+        <div id="Write-tweet-tools">
+          <div class="tool-wrapper">
+            <i class="bi bi-image tool"></i>
+          </div>
+          <div class="tool-wrapper">
+            <i class="bi bi-filetype-gif tool"></i>
+          </div>
+          <div class="tool-wrapper">
+            <i class="bi bi-list-task tool"></i>
+          </div>
+          <div class="tool-wrapper">
+            <i class="bi bi-emoji-smile tool"></i>
+          </div>
+          <div class="tool-wrapper">
+            <i class="bi bi-calendar-plus tool"></i>
+          </div>
+          <div class="tool-wrapper">
+            <i class="bi bi-geo-alt tool"></i>
+          </div>
+        </div>
+        <div id="Write-tweet-submit-wrapper">
+          <a (click)="onWriteTweetButtonClick()" id="Write-tweet-submit-btn">
+            <div id="Write-tweet-submit-btn-inner">
+              <span id="Write-tweet-submit-btn-label">Tweet</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isTimelineLoading || isUserTweetsLoading; else postFeed">
+    <div class="posts-loading">
+      <div class="lds-ellipsis">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #postFeed>
+    <div *ngIf="tweets.length < 1" class="no-tweets">
+      <p>
+        Hmm, you don't seem to have any tweets yet...<br />
+        Try following
+        <strong
+          ><a class="underline-pointer" (click)="followPublic()">@public</a>
+        </strong>
+        to get your feed started!
+      </p>
+    </div>
+    <div class="Post" *ngFor="let tweet of tweets">
+      <div class="post-pfp-container">
+        <i class="bi bi-person post-pfp-icon"></i>
+      </div>
+      <div class="post-contents-container">
+        <div class="post-info">
+          <div class="poster-name underline-pointer">
+            {{ tweet.name }}
+          </div>
+          <div class="poster-tag">@{{ tweet.tag }} ·</div>
+          <div
+            class="time-since underline-pointer"
+            [title]="getTweetHoverDate(tweet.ts)"
+          >
+            {{ getTweetTimeElapsed(tweet.ts) }}
+          </div>
+        </div>
+        <div class="post-text">{{ tweet.text }}</div>
+        <div class="post-actions">
+          <div class="reply-action">
+            <i class="bi bi-chat post-action"></i>
+          </div>
+          <div class="retweet-action">
+            <i class="bi bi-arrow-repeat post-action"></i>
+          </div>
+          <div class="like-action">
+            <i class="bi bi-heart post-action"></i>
+          </div>
+          <div class="share-action">
+            <i class="bi bi-upload post-action"></i>
+          </div>
+        </div>
+      </div>
+      <div class="post-options">
+        <i class="bi bi-three-dots"></i>
+      </div>
+    </div>
+  </ng-template>
+</div>

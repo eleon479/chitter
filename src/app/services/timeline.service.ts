@@ -7,7 +7,7 @@ import { map } from 'rxjs';
 import { TweetDTO } from '../models/tweet.model';
 import { Follow } from '../models/user.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class TimelineService {
   private tweetsCollectionPath = '/tweets';
   tweetsRef: AngularFirestoreCollection<TweetDTO>;

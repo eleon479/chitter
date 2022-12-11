@@ -1,0 +1,239 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  max-width: 275px;
+  padding: 0 12px;
+  margin: 0;
+}
+
+a {
+  font-weight: 400;
+  padding: 4px 0px;
+  width: 100%;
+}
+
+a.Active-tab {
+  font-weight: 700;
+}
+
+.Navigation-link-inner {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 12px;
+  font-size: 20px;
+  width: fit-content;
+}
+
+a:hover .Navigation-link-inner {
+  background-color: var(--highlight);
+  border-radius: 9999px;
+}
+
+.Navigation-icon-wrapper {
+  display: flex;
+  line-height: 25px;
+  font-size: 25px;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.Navigation-icon-wrapper .bi {
+  width: 25px;
+  height: 25px;
+  margin: 0 auto;
+  padding: 0;
+  font-size: 25px;
+}
+
+.Navigation-icon-wrapper.bird-logo {
+  font-size: 30px;
+}
+
+.Navigation-label-wrapper {
+  margin: 0px 16px 0px 20px;
+}
+
+a.Navigation-tweet-btn-lg {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 200px;
+  height: 50px;
+  padding: 0 30px;
+  background-color: var(--button);
+  border-radius: 25px;
+}
+
+a.Navigation-tweet-btn-sm {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  background-color: var(--button);
+  border-radius: 25px;
+}
+
+.Navigation-tweet-btn-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--text);
+}
+
+.Account-switch-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.Account-switch-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-grow: 1;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.Account-switch-wrapper:hover {
+  background-color: var(--highlight);
+  border-radius: 50px;
+}
+
+.Account-switch-pfp-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.Account-switch-pfp {
+  line-height: 36px;
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 36px;
+  border: 2px solid white;
+  margin: 0;
+  padding: 0;
+}
+
+.Account-switch-details-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.Account-switch-details-inner {
+  margin: 0 12px;
+}
+
+.Account-switch-name {
+  color: #f7f9f9;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.Account-switch-tag {
+  color: var(--subtext);
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.Account-switch-options {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 18px;
+}
+
+@media (min-width: 0px) and (max-width: 500px) {
+  :host {
+    display: none;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 700px) {
+  :host {
+    max-width: 88px;
+    flex-shrink: 0;
+  }
+
+  .Navigation-link-inner {
+    justify-content: center;
+  }
+
+  .Navigation-label-wrapper {
+    display: none;
+  }
+
+  .Account-switch-details-container {
+    display: none;
+  }
+
+  .Account-switch-options {
+    display: none;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 1280px) {
+  :host {
+    max-width: 88px;
+    flex-shrink: 0;
+    align-items: stretch;
+  }
+  a {
+    width: 100%;
+  }
+  .Navigation-link-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: flex-start;
+    padding: 12px;
+    font-size: 20px;
+    margin: 0;
+  }
+  .Navigation-label-wrapper {
+    display: none;
+  }
+  .Account-switch-details-container {
+    display: none;
+  }
+  .Account-switch-options {
+    display: none;
+  }
+}
+
+@media (min-width: 1000px) {
+}
+
+@media (min-width: 500px) and (max-width: 1280px) {
+  a.Navigation-tweet-btn-lg {
+    display: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  :host {
+    max-width: 275px;
+    align-items: stretch;
+    flex-basis: 275px;
+    flex-grow: 0;
+  }
+  a.Navigation-tweet-btn-sm {
+    display: none;
+  }
+}

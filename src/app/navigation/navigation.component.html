@@ -1,0 +1,86 @@
+<a href="/">
+  <div class="Navigation-link-inner">
+    <div class="Navigation-icon-wrapper bird-logo">
+      <i class="bi bi-twitter"></i>
+    </div>
+  </div>
+</a>
+<a href="/home" class="Active-tab">
+  <div class="Navigation-link-inner">
+    <div class="Navigation-icon-wrapper">
+      <i class="bi bi-house-heart-fill"></i>
+    </div>
+    <div class="Navigation-label-wrapper">
+      <span>Home</span>
+    </div>
+  </div>
+</a>
+<a href="/explore">
+  <div class="Navigation-link-inner">
+    <div class="Navigation-icon-wrapper">
+      <i class="bi bi-hash"></i>
+    </div>
+    <div class="Navigation-label-wrapper">
+      <span>Explore</span>
+    </div>
+  </div>
+</a>
+<a href="/notis">
+  <div class="Navigation-link-inner">
+    <div class="Navigation-icon-wrapper">
+      <i class="bi bi-bell"></i>
+    </div>
+    <div class="Navigation-label-wrapper">
+      <span>Notifications</span>
+    </div>
+  </div>
+</a>
+<a href="/dms">
+  <div class="Navigation-link-inner">
+    <div class="Navigation-icon-wrapper">
+      <i class="bi bi-envelope"></i>
+    </div>
+    <div class="Navigation-label-wrapper">
+      <span>Messages</span>
+    </div>
+  </div>
+</a>
+<a href="/profile">
+  <div class="Navigation-link-inner">
+    <div class="Navigation-icon-wrapper">
+      <i class="bi bi-person"></i>
+    </div>
+    <div class="Navigation-label-wrapper">
+      <span>Profile</span>
+    </div>
+  </div>
+</a>
+<a href="/new" class="Navigation-tweet-btn-lg">
+  <div class="Navigation-tweet-btn-inner">
+    <span class="Navigation-tweet-btn-label">Tweet</span>
+  </div>
+</a>
+<a href="/new" class="Navigation-tweet-btn-sm">
+  <div class="Navigation-tweet-btn-inner">
+    <span class="Navigation-tweet-btn-icon">
+      <i class="bi bi-pencil-square write-icon"></i>
+    </span>
+  </div>
+</a>
+
+<div class="Account-switch-container">
+  <div class="Account-switch-wrapper">
+    <div class="Account-switch-pfp-container">
+      <i class="bi bi-person Account-switch-pfp"></i>
+    </div>
+    <div class="Account-switch-details-container">
+      <div class="Account-switch-details-inner">
+        <div class="Account-switch-name">{{ currentUser?.name }}</div>
+        <div class="Account-switch-tag">@{{ currentUser?.tag }}</div>
+      </div>
+    </div>
+    <div class="Account-switch-options">
+      <i class="bi bi-three-dots"></i>
+    </div>
+  </div>
+</div>

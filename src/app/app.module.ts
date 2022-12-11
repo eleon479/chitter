@@ -33,9 +33,18 @@ import { AngularFireAuthGuardModule } from '@angular/fire/compat/auth-guard';
 
 import { TimelineService } from './services/timeline.service';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { UserService } from './services/user.service';
+import { HomeComponent } from './home/home.component';
+import { ExploreComponent } from './explore/explore.component';
+import { NavigationComponent } from './navigation/navigation.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    NavigationComponent,
+    HomeComponent,
+    ExploreComponent,
+  ],
   imports: [
     BrowserModule,
     FormsModule,
@@ -49,6 +58,7 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
     provideFirebaseApp(() => initializeApp(environment.firebase)),
   ],
   providers: [
+    UserService,
     TimelineService,
     UserTrackingService,
     ScreenTrackingService,

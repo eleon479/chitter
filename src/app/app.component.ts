@@ -23,13 +23,13 @@ export class AppComponent implements OnInit {
   currentUser: User;
 
   // new tweet creation
-  newTweetBuffer = '';
-  newTweetSending = false;
+  // newTweetBuffer = '';
+  // newTweetSending = false;
 
   // timeline / tweet feed
-  tweets: Tweet[];
-  followingTweets: Tweet[];
-  userTweets: Tweet[];
+  tweets: Tweet[] = [];
+  followingTweets: Tweet[] = [];
+  userTweets: Tweet[] = [];
   isTimelineLoading = true;
   isUserTweetsLoading = true;
 
@@ -38,10 +38,6 @@ export class AppComponent implements OnInit {
     private timelineService: TimelineService,
     private userService: UserService
   ) {
-    this.tweets = [];
-    this.followingTweets = [];
-    this.userTweets = [];
-
     this.getUserList();
     // this.setupUserApp(this.tempUserId);
 
@@ -104,9 +100,16 @@ export class AppComponent implements OnInit {
           };
 
           // update user doc with tag
-          this.userService.createUser(newUser).then((ok) => {
-            console.log('new user added: ', newUser);
-          });
+          this.userService
+            .createUser(newUser)
+            .then((ok) => {
+              console.log('new user added: ', newUser);
+            })
+            .finally(() => {
+              this.userService.createUserFeed(newUser).then(() => {
+                console.log('new user feed collection created');
+              });
+            });
         } else {
           // 1. get user acc
         }
@@ -197,34 +200,34 @@ export class AppComponent implements OnInit {
       });
   }
 
-  createTweet(): void {
-    if (this.newTweetBuffer.length < 1) {
-      return;
-    }
+  // createTweet(): void {
+  //   if (this.newTweetBuffer.length < 1) {
+  //     return;
+  //   }
 
-    this.newTweetSending = true;
-    const newTweet: TweetDTO = {
-      name: this.currentUser.name,
-      tag: this.currentUser.tag,
-      ts: new Timestamp(Date.now() / 1000, 0),
-      text: this.newTweetBuffer,
-      userId: this.currentUser.id,
-    };
-    this.timelineService.create(newTweet).then(() => {
-      this.newTweetBuffer = '';
-      this.newTweetSending = false;
-    });
-  }
+  //   this.newTweetSending = true;
+  //   const newTweet: TweetDTO = {
+  //     name: this.currentUser.name,
+  //     tag: this.currentUser.tag,
+  //     ts: new Timestamp(Date.now() / 1000, 0),
+  //     text: this.newTweetBuffer,
+  //     userId: this.currentUser.id,
+  //   };
+  //   this.timelineService.create(newTweet).then(() => {
+  //     this.newTweetBuffer = '';
+  //     this.newTweetSending = false;
+  //   });
+  // }
 
-  onWriteTweetInput(event) {
-    if (event.key === 'Enter' && event.ctrlKey) {
-      this.createTweet();
-    }
-  }
+  // onWriteTweetInput(event) {
+  //   if (event.key === 'Enter' && event.ctrlKey) {
+  //     this.createTweet();
+  //   }
+  // }
 
-  onWriteTweetButtonClick() {
-    this.createTweet();
-  }
+  // onWriteTweetButtonClick() {
+  //   this.createTweet();
+  // }
 
   followPublic() {
     this.userService
@@ -241,54 +244,54 @@ export class AppComponent implements OnInit {
     // backend cloud function calls w/ a trigger on those collections/docs
   }
 
-  getTweetHoverDate(ts: Date) {
-    let hoverTime = ts.toLocaleTimeString('en-us', {
-      hour: 'numeric',
-      minute: 'numeric',
-    });
-    let hoverDate = ts.toLocaleDateString('en-us', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
+  // getTweetHoverDate(ts: Date) {
+  //   let hoverTime = ts.toLocaleTimeString('en-us', {
+  //     hour: 'numeric',
+  //     minute: 'numeric',
+  //   });
+  //   let hoverDate = ts.toLocaleDateString('en-us', {
+  //     month: 'short',
+  //     day: 'numeric',
+  //     year: 'numeric',
+  //   });
 
-    return `${hoverTime} - ${hoverDate}`;
-  }
+  //   return `${hoverTime} - ${hoverDate}`;
+  // }
 
-  getTweetTimeElapsed(ts: Date) {
-    const current = new Date();
-    const currentTime = current.getTime();
-    const tweetTime = ts.getTime();
-    const diffTime = currentTime - tweetTime;
-    const diffs = {
-      seconds: diffTime / 1000,
-      minutes: diffTime / 1000 / 60,
-      hours: diffTime / 1000 / 60 / 60,
-      days: diffTime / 1000 / 60 / 60 / 24,
-    };
+  // getTweetTimeElapsed(ts: Date) {
+  //   const current = new Date();
+  //   const currentTime = current.getTime();
+  //   const tweetTime = ts.getTime();
+  //   const diffTime = currentTime - tweetTime;
+  //   const diffs = {
+  //     seconds: diffTime / 1000,
+  //     minutes: diffTime / 1000 / 60,
+  //     hours: diffTime / 1000 / 60 / 60,
+  //     days: diffTime / 1000 / 60 / 60 / 24,
+  //   };
 
-    let timeElapsedText = '';
-    if (diffs.days >= 1) {
-      if (current.getFullYear() !== ts.getFullYear()) {
-        timeElapsedText = ts.toLocaleDateString('en-us', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-        });
-      } else {
-        timeElapsedText = ts.toLocaleDateString('en-us', {
-          month: 'short',
-          day: 'numeric',
-        });
-      }
-    } else if (diffs.hours >= 1) {
-      timeElapsedText = Math.round(diffs.hours) + 'h';
-    } else if (diffs.minutes >= 1) {
-      timeElapsedText = Math.round(diffs.minutes) + 'm';
-    } else {
-      timeElapsedText = Math.round(diffs.seconds) + 's';
-    }
+  //   let timeElapsedText = '';
+  //   if (diffs.days >= 1) {
+  //     if (current.getFullYear() !== ts.getFullYear()) {
+  //       timeElapsedText = ts.toLocaleDateString('en-us', {
+  //         month: 'short',
+  //         day: 'numeric',
+  //         year: 'numeric',
+  //       });
+  //     } else {
+  //       timeElapsedText = ts.toLocaleDateString('en-us', {
+  //         month: 'short',
+  //         day: 'numeric',
+  //       });
+  //     }
+  //   } else if (diffs.hours >= 1) {
+  //     timeElapsedText = Math.round(diffs.hours) + 'h';
+  //   } else if (diffs.minutes >= 1) {
+  //     timeElapsedText = Math.round(diffs.minutes) + 'm';
+  //   } else {
+  //     timeElapsedText = Math.round(diffs.seconds) + 's';
+  //   }
 
-    return timeElapsedText;
-  }
+  //   return timeElapsedText;
+  // }
 }

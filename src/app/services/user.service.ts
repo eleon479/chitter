@@ -33,6 +33,13 @@ export class UserService {
     return this.db.doc<User>(`/users/${user.id}`).set({ ...user });
   }
 
+  async createUserFeed(user: User) {
+    console.log('creating user feed for: ', user);
+
+    await this.db.doc(`/feeds/${user.id}`).set({});
+    await this.db.collection(`/feeds/${user.id}/tweets`).add({});
+  }
+
   followUser(followerId: string, followingId: string) {
     return this.db
       .collection<Follow>(`/follows`)
@@ -56,9 +63,13 @@ export class UserService {
       )
       .subscribe((tweets) => {
         tweets.forEach((tweet) => {
-          this.db
-            .doc(`/feeds/${followerId}/tweets/${tweet.id}`)
-            .set({ ...tweet });
+          console.log('adding tweet to feed: ', tweet);
+
+          // this.db.doc(`/feeds/${followerId}`).collection(`/tweets`).doc(tweet.id).set({...tweet});
+          // this.db
+          //   .collection(`/feeds/${followerId}/tweets`)
+          //   .doc(tweet.id)
+          //   .set({ ...tweet });
         });
       });
   }
