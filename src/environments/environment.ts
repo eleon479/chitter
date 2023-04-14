@@ -1,6 +1,6 @@
 export const environment = {
-  useEmulators: true,
-  production: false,
+  useEmulators: false,
+  production: true,
   firebase: {
     apiKey: 'AIzaSyAVUUVhTmdVwP3YcefWwZk4BDfWPsqmb6w',
     authDomain: 'chitter-e2df5.firebaseapp.com',

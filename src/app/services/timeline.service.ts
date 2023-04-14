@@ -1,65 +1,104 @@
-import { Injectable } from '@angular/core';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection,
-} from '@angular/fire/compat/firestore';
-import { map } from 'rxjs';
-import { TweetDTO } from '../models/tweet.model';
-import { Follow } from '../models/user.model';
+import { EventEmitter, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AccountEvent, AccountService, UserAccount } from './account.service';
 
-@Injectable()
+export type UserTimeline = {
+  posts: any[];
+  isLoading: boolean;
+};
+
+export type TimelineEvent = {
+  type: 'empty' | 'load' | 'update' | 'error';
+  data: UserTimeline;
+};
+
+@Injectable({ providedIn: 'root' })
 export class TimelineService {
-  private tweetsCollectionPath = '/tweets';
-  tweetsRef: AngularFirestoreCollection<TweetDTO>;
+  private timeline: UserTimeline;
+  public readonly timeline$: Observable<UserTimeline>;
+  public readonly timelineEvents$: EventEmitter<TimelineEvent>;
 
-  constructor(private db: AngularFirestore) {
-    this.tweetsRef = db.collection(this.tweetsCollectionPath, (ref) =>
-      ref.orderBy('ts', 'desc')
-    );
+  constructor(private accountService: AccountService) {
+    this.accountService = accountService;
+    this.timeline = {} as UserTimeline;
+    this.timeline$ = new Observable<UserTimeline>();
+    this.timelineEvents$ = new EventEmitter<TimelineEvent>();
   }
 
-  getFeedByUserId(userId: string): AngularFirestoreCollection<TweetDTO> {
-    return this.db.collection(`/feeds/${userId}/tweets`, (ref) =>
-      ref.orderBy('ts', 'desc')
-    );
-  }
+  loadFeed() {
+    this.timeline.isLoading = true;
+    this.timeline.posts = [];
 
-  getTweetsByUserId(userId: string): AngularFirestoreCollection<TweetDTO> {
-    return this.db.collection<TweetDTO>(`/tweets`, (ref) =>
-      ref.where('userId', '==', userId)
-    );
-  }
-
-  getAll(): AngularFirestoreCollection<TweetDTO> {
-    return this.tweetsRef;
-  }
-
-  create(tweet: TweetDTO) {
-    return this.tweetsRef.add({ ...tweet }).then((ref) => {
-      // get followers
-      const followQuery = this.db.collection<Follow>('/follows', (followRef) =>
-        followRef.where('followingUserId', '==', tweet.userId)
-      );
-
-      followQuery
-        .snapshotChanges()
-        .pipe(
-          map((changes) =>
-            changes.map((c) => ({
-              id: c.payload.doc.id,
-              ...c.payload.doc.data(),
-            }))
-          )
-        )
-        .subscribe((followers) => {
-          console.log(followers);
-          followers.forEach((follower) => {
-            this.db
-              .collection(`/feeds/${follower.followerUserId}/tweets`)
-              .doc(ref.id)
-              .set({ ...tweet });
-          });
-        });
+    this.timelineEvents$.emit({
+      type: 'empty',
+      data: {
+        posts: this.timeline.posts,
+        isLoading: true,
+      },
     });
+
+    // listen for account events
+    this.accountService.accountEvents$.subscribe(this.handleAccountEvent);
+  }
+
+  handleAccountEvent(event: AccountEvent) {
+    if (event.type === 'switch') {
+      this.stopFeed(event.data);
+    }
+
+    const startEvents = ['load', 'login', 'switch'];
+    const stopEvents = ['empty', 'logout', 'expire', 'error'];
+
+    if (stopEvents.includes(event.type)) this.stopFeed(event.data);
+    else if (startEvents.includes(event.type)) this.startFeed(event.data);
+    else console.warn('Unhandled account event', event);
+  }
+
+  startFeed(account: UserAccount) {
+    console.debug('startFeed()');
+
+    // listen for new posts
+    this.addPostToFeed('A');
+    this.addPostToFeed('B');
+    this.addPostToFeed('C');
+    setTimeout(() => this.addPostToFeed('D'), 3000);
+    setTimeout(() => this.addPostToFeed('E'), 1000);
+  }
+
+  stopFeed(account) {
+    console.debug(`stopFeed(${account})`);
+
+    // 1. stop listening for new posts
+
+    // 2. clear feed
+    this.resetFeed();
+  }
+
+  resetFeed() {
+    this.timeline.posts = [];
+    this.timeline.isLoading = false;
+    this.timelineEvents$.emit({
+      type: 'empty',
+      data: {
+        posts: this.timeline.posts,
+        isLoading: true,
+      },
+    });
+  }
+
+  addPostToFeed(post: string) {
+    console.debug(`addPostToFeed(${post})`);
+    this.timeline.posts.push(post);
+    this.timelineEvents$.emit({
+      type: 'update',
+      data: {
+        posts: this.timeline.posts,
+        isLoading: false,
+      },
+    });
+  }
+
+  create(data) {
+    console.log(`create() ${data}`);
   }
 }

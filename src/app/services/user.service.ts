@@ -12,9 +12,33 @@ import { Follow, User } from '../models/user.model';
 export class UserService {
   private userCollectionPath = '/users';
   usersRef: AngularFirestoreCollection<User>;
+  currentUser: User;
 
   constructor(private db: AngularFirestore) {
     this.usersRef = db.collection(this.userCollectionPath);
+  }
+
+  async getUserList() {
+    let users = [];
+    await this.usersRef.get().forEach((user) => {
+      users.push(user);
+    });
+
+    return users;
+  }
+
+  getCurrentUser() {
+    return this.currentUser;
+  }
+
+  setCurrentUser(id: string) {
+    this.getUserById(id)
+      .valueChanges({ idField: 'id' })
+      .subscribe({
+        next: (user) => {
+          this.currentUser = user;
+        },
+      });
   }
 
   getUserById(id: string): AngularFirestoreDocument<User> {

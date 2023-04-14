@@ -75,8 +75,10 @@
     </div>
     <div class="Account-switch-details-container">
       <div class="Account-switch-details-inner">
-        <div class="Account-switch-name">{{ currentUser?.name }}</div>
-        <div class="Account-switch-tag">@{{ currentUser?.tag }}</div>
+        <div class="Account-switch-name">{{ userAccount?.name }}</div>
+        <div class="Account-switch-tag">
+          @{{ userAccount?.session?.handle }}
+        </div>
       </div>
     </div>
     <div class="Account-switch-options">

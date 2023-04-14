@@ -74,7 +74,7 @@
   </div>
 
   <ng-template #postFeed>
-    <div *ngIf="tweets.length < 1" class="no-tweets">
+    <div *ngIf="userTimeline.posts.length < 1" class="no-tweets">
       <p>
         Hmm, you don't seem to have any tweets yet...<br />
         Try following
@@ -84,24 +84,24 @@
         to get your feed started!
       </p>
     </div>
-    <div class="Post" *ngFor="let tweet of tweets">
+    <div class="Post" *ngFor="let post of userTimeline.posts">
       <div class="post-pfp-container">
         <i class="bi bi-person post-pfp-icon"></i>
       </div>
       <div class="post-contents-container">
         <div class="post-info">
           <div class="poster-name underline-pointer">
-            {{ tweet.name }}
+            {{ post.name }}
           </div>
-          <div class="poster-tag">@{{ tweet.tag }} ·</div>
+          <div class="poster-tag">@{{ post.tag }} ·</div>
           <div
             class="time-since underline-pointer"
-            [title]="getTweetHoverDate(tweet.ts)"
+            [title]="getTweetHoverDate(post.ts)"
           >
-            {{ getTweetTimeElapsed(tweet.ts) }}
+            {{ getTweetTimeElapsed(post.ts) }}
           </div>
         </div>
-        <div class="post-text">{{ tweet.text }}</div>
+        <div class="post-text">{{ post.text }}</div>
         <div class="post-actions">
           <div class="reply-action">
             <i class="bi bi-chat post-action"></i>

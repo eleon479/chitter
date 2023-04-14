@@ -1,15 +1,14 @@
 <div class="App">
   <div class="App-wrapper">
-    <app-navigation [currentUser]="currentUser"></app-navigation>
+    <app-navigation [userAccount]="userAccount"></app-navigation>
     <!-- @TODO add routing -->
     <app-home
-      [currentUser]="currentUser"
+      [userAccount]="userAccount"
       [isTimelineLoading]="isTimelineLoading"
       [isUserTweetsLoading]="isUserTweetsLoading"
-      [tweets]="tweets"
-      [followingTweets]="followingTweets"
-      [userTweets]="userTweets"
+      [userTimeline]="userTimeline"
     ></app-home>
+    <!-- <app-explore [auth]="null"></app-explore> -->
     <app-explore></app-explore>
   </div>
 </div>

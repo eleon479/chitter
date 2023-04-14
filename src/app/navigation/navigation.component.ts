@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from '../models/user.model';
+import { UserAccount } from '../services/account.service';
 
 @Component({
   selector: 'app-navigation',
@@ -7,7 +7,7 @@ import { User } from '../models/user.model';
   styleUrls: ['./navigation.component.css'],
 })
 export class NavigationComponent implements OnInit {
-  @Input() currentUser: User;
+  @Input() userAccount: UserAccount;
 
   constructor() {}
 

@@ -2,7 +2,8 @@ import { Component, Input } from '@angular/core';
 import { Timestamp } from '@angular/fire/firestore';
 import { Tweet, TweetDTO } from '../models/tweet.model';
 import { User } from '../models/user.model';
-import { TimelineService } from '../services/timeline.service';
+import { TimelineService, UserTimeline } from '../services/timeline.service';
+import { UserAccount } from '../services/account.service';
 
 @Component({
   selector: 'app-home',
@@ -10,14 +11,10 @@ import { TimelineService } from '../services/timeline.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-  @Input() currentUser: User;
-
-  @Input() isTimelineLoading = true;
-  @Input() isUserTweetsLoading = true;
-
-  @Input() tweets: Tweet[] = [];
-  @Input() followingTweets: Tweet[] = [];
-  @Input() userTweets: Tweet[] = [];
+  @Input() userAccount: UserAccount;
+  @Input() userTimeline: UserTimeline;
+  @Input() isTimelineLoading: boolean;
+  @Input() isUserTweetsLoading: boolean;
 
   newTweetBuffer = '';
   newTweetSending = false;
@@ -31,16 +28,16 @@ export class HomeComponent {
 
     this.newTweetSending = true;
     const newTweet: TweetDTO = {
-      name: this.currentUser.name,
-      tag: this.currentUser.tag,
+      name: this.userAccount.name,
+      tag: this.userAccount.session.handle,
       ts: new Timestamp(Date.now() / 1000, 0),
       text: this.newTweetBuffer,
-      userId: this.currentUser.id,
+      userId: this.userAccount.session.did,
     };
-    this.timelineService.create(newTweet).then(() => {
-      this.newTweetBuffer = '';
-      this.newTweetSending = false;
-    });
+
+    this.timelineService.create(newTweet);
+    this.newTweetBuffer = '';
+    this.newTweetSending = false;
   }
 
   onWriteTweetInput(event) {
@@ -102,5 +99,9 @@ export class HomeComponent {
     }
 
     return timeElapsedText;
+  }
+
+  followPublic() {
+    console.log('followPublic()');
   }
 }

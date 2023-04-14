@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^15.0.0",
     "@angular/platform-browser-dynamic": "^15.0.0",
     "@angular/router": "^15.0.0",
+    "@atproto/api": "^0.2.7",
     "bootstrap-icons": "^1.10.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

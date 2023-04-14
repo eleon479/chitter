@@ -8,4 +8,7 @@ import { Component } from '@angular/core';
 export class ExploreComponent {
   trending = ['#ByeTwitter', '#WorldCup2022', '#SomethingElse'];
   suggested = ['@userA', '@userB', '@userC'];
+
+  constructor() {}
+  ngOnInit() {}
 }

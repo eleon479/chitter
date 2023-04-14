@@ -142,6 +142,16 @@ input[type="text"]#search-input::placeholder {
   color: var(--text);
 }
 
+#release-info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+#release-info {
+  font-size: 12px;
+}
+
 @media (min-width: 0px) and (max-width: 500px) {
   :host {
     display: none;
